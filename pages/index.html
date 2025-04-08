@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/6821/6821040.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-center text-blue-600 mb-2">Posts Dashboard</h1>
+            <nav class="flex justify-center space-x-6 mb-6">
+                <button id="posts-tab" class="nav-link active px-4 py-2 text-lg text-gray-700"
+                    onclick="switchPage('posts')">
+                    <i class="fas fa-list mr-2"></i>Posts
+                </button>
+                <button id="reports-tab" class="nav-link px-4 py-2 text-lg text-gray-700"
+                    onclick="switchPage('reports')">
+                    <i class="fas fa-chart-bar mr-2"></i>Reports
+                </button>
+            </nav>
+        </header>
+
+        <!-- Posts Page -->
+        <div id="posts-page" class="page active">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4 md:mb-0">All Posts</h2>
+                    <div class="relative w-full md:w-64">
+                        <input type="text" id="search-input" placeholder="Search posts..."
+                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    User ID</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Title</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Body</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posts-table" class="divide-y divide-gray-200">
+                            <!-- Posts will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Navigation Page -->
+                <div class="mt-4 flex justify-between items-center">
+                    <div id="post-count" class="text-sm text-gray-600"></div>
+                    <div class="flex space-x-2">
+                        <button id="prev-btn" class="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-left mr-2"></i>Previous
+                        </button>
+                        <button id="next-btn"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50">
+                            Next<i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Page -->
+        <div id="reports-page" class="page">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Report 1: Count of posts with "rerum" -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Total Posts with "rerum" in body</h2>
+                    <div class="flex items-center justify-center h-40">
+                        <div class="text-center">
+                            <div id="rerum-count" class="text-5xl font-bold text-blue-600 mb-2">0</div>
+                            <p class="text-gray-600">posts contain the word "rerum"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report 2: Posts per user -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Total Posts per User</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        User ID</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Post Count</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-posts-table" class="divide-y divide-gray-200">
+                                <!-- User post counts will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div id="comments-modal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-2xl">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800" id="modal-title">Comments for Post #<span
+                            id="post-id-placeholder"></span></h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="comments-container" class="max-h-96 overflow-y-auto space-y-4">
+                    <!-- Comments will be loaded here -->
+                </div>
+                <div id="loading-comments" class="text-center py-8 hidden">
+                    <div class="inline-block loading-spinner">
+                        <i class="fas fa-spinner text-3xl text-blue-500"></i>
+                    </div>
+                    <p class="mt-2 text-gray-600">Loading comments...</p>
+                </div>
+                <div id="no-comments" class="text-center py-8 hidden">
+                    <i class="fas fa-comment-slash text-3xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-600">No comments found for this post</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
