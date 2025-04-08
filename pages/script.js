@@ -293,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Close modal with ESC key
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && commentsModal.classList.contains("active")) {
+    if (e.key === "Escape" && !commentsModal.classList.contains("hidden")) {
       closeModal();
     }
   });
